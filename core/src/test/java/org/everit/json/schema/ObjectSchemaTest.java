@@ -396,7 +396,7 @@ public class ObjectSchemaTest {
     public void toStringTest() {
         JSONObject rawSchemaJson = loader.readObj("tostring/objectschema.json");
         String actual = SchemaLoader.load(rawSchemaJson).toString();
-        System.out.println("testing workflow");
+        //System.out.println("testing workflow");
         assertThat(new JSONObject(actual), sameJsonAs(rawSchemaJson));
     }
 
