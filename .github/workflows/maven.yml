@@ -30,7 +30,7 @@ jobs:
         distribution: 'adopt'
     
     - name: Compile the code
-      run: mvn clean install -DskipTests -pl -core -am
+      run: mvn clean install -DskipTests -pl core -am
 
     - name: Run specific test case using maven
       run: mvn -pl core test -Dtest=org.everit.json.schema.ObjectSchemaTest#toStringTest
