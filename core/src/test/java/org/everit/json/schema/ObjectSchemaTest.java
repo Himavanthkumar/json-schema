@@ -399,14 +399,6 @@ public class ObjectSchemaTest {
         assertThat(new JSONObject(actual), sameJsonAs(rawSchemaJson));
     }
 
-    /*@Test
-    public void toStringNoExplicitType() {
-        JSONObject rawSchemaJson = loader.readObj("tostring/objectschema.json");
-        rawSchemaJson.remove("type");
-        String actual = SchemaLoader.load(rawSchemaJson).toString();
-        assertThat(new JSONObject(actual), sameJsonAs(rawSchemaJson));
-    }*/
-    
     @Test
     public void toStringNoExplicitType() {
         JSONObject rawSchemaJson = loader.readObj("tostring/objectschema.json");
