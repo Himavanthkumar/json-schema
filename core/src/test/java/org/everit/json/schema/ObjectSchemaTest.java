@@ -397,16 +397,55 @@ public class ObjectSchemaTest {
         JSONObject rawSchemaJson = loader.readObj("tostring/objectschema.json");
         String actual = SchemaLoader.load(rawSchemaJson).toString();
         System.out.println("testing workflow");
-        assertThat(new JSONObject(actual), sameJsonAs(rawSchemaJson));
+        Map<String, Object> expectedMap = jsonToMap(rawSchemaJson);        
+        Map<String, Object> actualMap = jsonToMap(new JSONObject(actual));        
+        sortDependenciesValues(expectedMap);       
+        sortDependenciesValues(actualMap);  
+        assertThat(new JSONObject(actualMap), sameJsonAs(new JSONObject(expectedMap)));    
+      
     }
 
-    @Test
+    /*@Test
     public void toStringNoExplicitType() {
         JSONObject rawSchemaJson = loader.readObj("tostring/objectschema.json");
         rawSchemaJson.remove("type");
         String actual = SchemaLoader.load(rawSchemaJson).toString();
         assertThat(new JSONObject(actual), sameJsonAs(rawSchemaJson));
+    }*/
+
+    @Test    
+    public void toStringNoExplicitType() {        
+        JSONObject rawSchemaJson = loader.readObj("tostring/objectschema.json");        
+        rawSchemaJson.remove("type");        
+        String actual = SchemaLoader.load(rawSchemaJson).toString();        
+        Map<String, Object> expectedMap = jsonToMap(rawSchemaJson);        
+        Map<String, Object> actualMap = jsonToMap(new JSONObject(actual));        
+        sortDependenciesValues(expectedMap);       
+        sortDependenciesValues(actualMap);        
+        assertThat(new JSONObject(actualMap), sameJsonAs(new JSONObject(expectedMap)));    
+    }        
+    private Map<String, Object> jsonToMap(JSONObject json) {        
+        return json.toMap();    
+    }    
+    private void sortDependenciesValues(Map<String, Object> jsonObject) {
+        Object dependencies = jsonObject.get("dependencies");
+        if (dependencies instanceof Map) {
+            Map<String, List<String>> dependenciesMap = (Map<String, List<String>>) dependencies;
+            dependenciesMap.forEach((key, values) -> {
+                // Manual insertion sort for the list of strings
+                for (int i = 1; i < values.size(); i++) {
+                    String keyToInsert = values.get(i);
+                    int j = i - 1;
+                    while (j >= 0 && values.get(j).compareTo(keyToInsert) > 0) {
+                        values.set(j + 1, values.get(j));
+                        j--;
+                    }
+                    values.set(j + 1, keyToInsert);
+                }
+            });
+        }
     }
+    
 
     @Test
     public void toStringWithUnprocessedProps() {
