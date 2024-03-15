@@ -404,7 +404,29 @@ public class ObjectSchemaTest {
         JSONObject rawSchemaJson = loader.readObj("tostring/objectschema.json");
         rawSchemaJson.remove("type");
         String actual = SchemaLoader.load(rawSchemaJson).toString();
-        assertThat(new JSONObject(actual), sameJsonAs(rawSchemaJson));
+        Map<String, Object> expectedMap = rawSchemaJson.toMap();        
+        Map<String, Object> actualMap = (new JSONObject(actual)).toMap();        
+        sortDependenciesValues(expectedMap);        
+        sortDependenciesValues(actualMap);        
+        assertThat(new JSONObject(actualMap), sameJsonAs(new JSONObject(expectedMap)));
+    }
+    
+    private void sortDependenciesValues(Map<String, Object> jsonObject) {
+        Object dependencies = jsonObject.get("dependencies");
+        if (dependencies instanceof Map) {
+             Map<String, List<String>> dependenciesMap = (Map<String, List<String>>) dependencies;
+             dependenciesMap.forEach((key, values) -> {
+             	for (int i = 1; i < values.size(); i++) {
+                	String keyToInsert = values.get(i);
+                	int j = i - 1;
+                	while (j >= 0 && values.get(j).compareTo(keyToInsert) > 0) {
+                    		values.set(j + 1, values.get(j));
+                    		j--;
+                	}
+                	values.set(j + 1, keyToInsert);
+            	}
+           });
+      }
     }
 
     @Test
