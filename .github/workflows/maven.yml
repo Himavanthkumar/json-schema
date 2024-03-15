@@ -33,9 +33,9 @@ jobs:
       run: mvn clean install -DskipTests -pl core -am
 
     - name: Run specific test case using maven
-      run: mvn -pl core test -Dtest=org.everit.json.schema.ObjectSchemaTest#toStringNoExplicitType
+      run: mvn -pl core test -Dtest=org.everit.json.schema.ObjectSchemaTest#toStringTest
 
     - name: Run the specific test case using the nondex tool
-      run: mvn -pl core edu.illinois:nondex-maven-plugin:2.1.1:nondex -Dtest=org.everit.json.schema.ObjectSchemaTest#toStringNoExplicitType
+      run: mvn -pl core edu.illinois:nondex-maven-plugin:2.1.1:nondex -Dtest=org.everit.json.schema.ObjectSchemaTest#toStringTest
     
     
